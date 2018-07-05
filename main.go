@@ -8,12 +8,37 @@ import (
 )
 
 type Product struct {
-	Id             string `json:"id"`
+	Id             int `json:"id"`
 	BaseCurrency   string `json:"base_currency"`
 	QuoteCurrency  string `json:"quote_currency"`
-	BaseMinSize    string `json:"base_min_size"`
+	BaseMinSize    int `json:"base_min_size"`
 	BaseMaxSize    string `json:"base_max_size"`
 	QuoteIncrement string `json:"quote_increment"`
+
+	CancelOnly   bool   `json:"cancel_only"`
+	DisplayName  string `json:"display_name"`
+	LimitOnly    bool   `json:"limit_only"`
+	MarginEnable bool   `json:"margin_enable"`
+	//base_currency:	"BTC"
+	//base_max_size:	"50"
+	//base_min_size:	"0.001"
+	//cancel_only:	false
+	//display_name:	"BTC/EUR"
+	//id:	"BTC-EUR"
+	//limit_only:	false
+	//margin_enabled:	false
+	MaxMarketFunds string `json:"max_market_funds"`
+	//max_market_funds:	"600000"
+	MinMarketFunds string `json:"min_market_funds"`
+	//min_market_funds:	"10"
+	PostOnly bool `json:"post_only"`
+	//post_only:	false
+	//quote_currency:	"EUR"
+	//quote_increment:	"0.01"
+	Status string `json:"status"`
+	//status:	"online"
+	StatusMessage string `json:"status_message"`
+	//status_message:	null
 }
 
 func main() {
@@ -31,6 +56,10 @@ func main() {
 		fmt.Println("1 : ", err)
 		return
 	}
+	res.Header.Set("Content-Type", "application/json")
+	fmt.Println("res: ", res)
+	fmt.Println("resBody : ", res.Body)
+	defer res.Body.Close()
 
 	data, err := json.Marshal(res.Body)
 	if err != nil {
@@ -38,10 +67,6 @@ func main() {
 		return
 	}
 	fmt.Println("data: ", data)
-
-	res.Header.Set("Content-Type", "application/json")
-	fmt.Println("resBody : ", res.Body)
-	defer res.Body.Close()
 
 	//data, err := httputil.DumpResponse(res,false)
 	//if err!= nil{
@@ -54,6 +79,6 @@ func main() {
 		fmt.Println("3: ", err)
 		return
 	}
-	fmt.Println("4: ", products)
+	fmt.Println("products: ", products)
 
 }
