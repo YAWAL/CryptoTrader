@@ -5,8 +5,8 @@ import (
 	"os"
 	"fmt"
 	"encoding/json"
-	"net/http/httputil"
 )
+
 type Product struct {
 	Id             string `json:"id"`
 	BaseCurrency   string `json:"base_currency"`
@@ -16,38 +16,44 @@ type Product struct {
 	QuoteIncrement string `json:"quote_increment"`
 }
 
-func main()  {
+func main() {
 
 	secret := os.Getenv("COINBASE_SECRET")
 	key := os.Getenv("COINBASE_KEY")
 	passphrase := os.Getenv("COINBASE_PASSPHRASE")
 
-
 	client := gdaxClient.NewClient(secret, key, passphrase)
-	prod := Product{}
-	res, err:= client.Request("GET","/products",nil,nil)
-	if err!= nil{
-		fmt.Println("1 : ",err)
+	//prod := Product{}
+
+	products := Product{}
+	res, err := client.Request("GET", "/products", nil, nil)
+	if err != nil {
+		fmt.Println("1 : ", err)
 		return
 	}
 
-	//body := res.Body
-
-	fmt.Println("res : ",res)
-
-
-	data, err := httputil.DumpResponse(res,false)
-	if err!= nil{
-		fmt.Println("2: ", err)
+	data, err := json.Marshal(res.Body)
+	if err != nil {
+		fmt.Println("1,5: ", err)
 		return
 	}
-	fmt.Println("data: ", string(data))
+	fmt.Println("data: ", data)
 
-	err = json.Unmarshal(data, &prod)
-	if err!= nil{
-		fmt.Println("3: ",err)
+	res.Header.Set("Content-Type", "application/json")
+	fmt.Println("resBody : ", res.Body)
+	defer res.Body.Close()
+
+	//data, err := httputil.DumpResponse(res,false)
+	//if err!= nil{
+	//	fmt.Println("2: ", err)
+	//	return
+	//}
+
+	err = json.Unmarshal(data, &products)
+	if err != nil {
+		fmt.Println("3: ", err)
 		return
 	}
-	fmt.Println("4: ",prod)
+	fmt.Println("4: ", products)
 
 }
