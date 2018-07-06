@@ -25,7 +25,7 @@ type Client struct {
 
 func NewClient(secret, key, passphrase string) *Client {
 	client := Client{
-		BaseURL:    "https://api.pro.coinbase.com",
+		BaseURL:    "https://api-public.sandbox.pro.coinbase.com",
 		Secret:     secret,
 		Key:        key,
 		Passphrase: passphrase,
@@ -38,8 +38,7 @@ func NewClient(secret, key, passphrase string) *Client {
 	return &client
 }
 
-func (c *Client) Request(method string, url string,
-	params, result interface{}) (res *http.Response, err error) {
+func (c *Client) Request(method string, url string,	params, result interface{}) (res *http.Response, err error) {
 	for i := 0; i < c.RetryCount+1; i++ {
 		retryDuration := time.Duration((math.Pow(2, float64(i))-1)/2*1000) * time.Millisecond
 		time.Sleep(retryDuration)
@@ -55,8 +54,7 @@ func (c *Client) Request(method string, url string,
 	return res, err
 }
 
-func (c *Client) request(method string, url string,
-	params, result interface{}) (res *http.Response, err error) {
+func (c *Client) request(method string, url string,	params, result interface{}) (res *http.Response, err error) {
 	var data []byte
 	body := bytes.NewReader(make([]byte, 0))
 
